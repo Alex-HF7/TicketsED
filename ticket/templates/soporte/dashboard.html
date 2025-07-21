@@ -1,0 +1,205 @@
+{% extends "base/base.html" %}
+{% block title %}Pendientes{% endblock title %}
+{% block body %}
+<h2 class="text-center mt-4 mb-4 text-dark">
+  <i class="bi bi-list-task me-2"></i> Lista de Tickets
+</h2>
+
+<!-- Botón de exportación -->
+<div class="container mt-4">
+  <div class="d-flex justify-content-end mb-3">
+  <button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#modalExportar">
+    <i class="bi bi-file-earmark-excel"></i> Exportar .xlsx
+  </button>
+</div>
+
+  <div class="table-responsive">
+    <table class="table-custom">
+      <thead>
+        <tr>
+          <th class="col-id">ID</th>
+          <th>Empleado</th>
+          <th>Departamento</th>
+          <th>Categoria</th>
+          <th>Descripción</th>
+          <th>Estado</th>
+          <th></th>
+          <th>Atendio por:</th>
+          <th>Tiempo</th>
+          <th class="col-date">Fecha In</th>
+          <th class="col-date">Fecha Fin</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for ticket in tickets %}
+          <tr>
+            <td class="col-id">{{ ticket.id }}</td>
+            <td>{{ ticket.empleado.get_full_name }}</td>
+            <td>{{ ticket.empleado.depto }}</td>
+            <td>{{ ticket.categoria|capfirst}}</td>
+            <td>{{ ticket.descripcion|capfirst }}</td>
+            <td>
+              {% if ticket.estado == 'resuelto' %}
+                <span class="fw-bold text-success">{{ticket.estado|capfirst}}</span> 
+              {% elif ticket.estado == 'en curso' %}
+                <span class="fw-bold text-warning">{{ticket.estado|capfirst}}</span> 
+              {% else %}
+                <span class="fw-bold text-danger">{{ticket.estado|capfirst}}</span> 
+              {% endif %}
+            </td>
+            <td class="col-id">
+              {% if ticket.estado == 'pendiente' %}
+                <form method="post" style="display:inline;">
+                  {% csrf_token %}
+                  <input type="hidden" name="ticket_id" value="{{ ticket.id }}">
+                  <input type="hidden" name="accion" value="atender">
+                  <button type="submit" class="btn btn-sm btn-outline-primary" title="Atender Ticket">
+                    <i class="bi bi-folder"></i>
+                  </button>
+                </form>
+              {% elif ticket.estado == 'en curso' %}
+                <form method="post" style="display:inline;">
+                  {% csrf_token %}
+                  <input type="hidden" name="ticket_id" value="{{ ticket.id }}">
+                  <input type="hidden" name="accion" value="cerrar">
+                  <button type="submit" class="btn btn-sm btn-outline-success" title="Marcar como Resuelto">
+                    <i class="bi bi-folder2-open"></i>
+                  </button>
+                </form>
+              {% else %}
+                <span class="text-success" title="Ticket resuelto">
+                  <i class="bi bi-folder-fill"></i>
+                </span>
+              {% endif %}
+            </td>
+            <td>
+                {% if ticket.atendido_por %}
+                {{ ticket.atendido_por.username }}
+              {% else %}
+                -
+              {% endif %}
+            </td>
+            <td>{{ ticket.tiempo | default:"-"}}</td>
+            <td class="col-date">{{ ticket.fecha_creado|date:"d M Y" }}</td>
+            <td class="col-date">{{ ticket.fecha_cierre|date:"d M Y" }}</td>
+          </tr>
+        {% empty %}
+          <tr>
+            <td colspan="6">No hay tickets registrados.</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<nav aria-label="Paginación de tickets">
+  <ul class="pagination justify-content-center mt-4">
+    {% if tickets.has_previous %}
+      <li class="page-item">
+        <a class="page-link" href="?page=1">Primera</a>
+      </li>
+      <li class="page-item">
+        <a class="page-link" href="?page={{ tickets.previous_page_number }}">«</a>
+      </li>
+    {% else %}
+      <li class="page-item disabled"><span class="page-link">Primera</span></li>
+      <li class="page-item disabled"><span class="page-link">«</span></li>
+    {% endif %}
+
+    {# Mostrar rango de páginas #}
+    {% for i in tickets.paginator.page_range %}
+      {% if i >= tickets.number|add:'-2' and i <= tickets.number|add:'2' %}
+        {% if tickets.number == i %}
+          <li class="page-item active">
+            <span class="page-link">{{ i }}</span>
+          </li>
+        {% else %}
+          <li class="page-item">
+            <a class="page-link" href="?page={{ i }}">{{ i }}</a>
+          </li>
+        {% endif %}
+      {% endif %}
+    {% endfor %}
+
+    {% if tickets.has_next %}
+      <li class="page-item">
+        <a class="page-link" href="?page={{ tickets.next_page_number }}">»</a>
+      </li>
+      <li class="page-item">
+        <a class="page-link" href="?page={{ tickets.paginator.num_pages }}">Última</a>
+      </li>
+    {% else %}
+      <li class="page-item disabled"><span class="page-link">»</span></li>
+      <li class="page-item disabled"><span class="page-link">Última</span></li>
+    {% endif %}
+  </ul>
+</nav>
+
+<!-- Modal de Exportación -->
+<div class="modal fade" id="modalExportar" tabindex="-1" aria-labelledby="modalExportarLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <form method="get">
+      <div class="modal-content">
+        <div class="modal-header bg-light">
+          <h5 class="modal-title" id="modalExportarLabel">
+            <i class="bi bi-file-earmark-excel-fill me-2 text-success"></i> Exportar Tickets a Excel
+          </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="exportar-mes" class="form-label">Selecciona el mes:</label>
+            <input type="month" name="mes" id="exportar-mes" class="form-control" required>
+          </div>
+          <input type="hidden" name="exportar" value="excel">
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+            <i class="bi bi-x-circle"></i> Cancelar
+          </button>
+          <button type="submit" class="btn btn-success">
+            <i class="bi bi-download"></i> Exportar
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+{% if messages %}
+  <div id="toast-container" class="toast-container position-fixed bottom-0 start-50 translate-middle-x p-3" style="z-index: 1055;">
+    {% for message in messages %}
+      <div class="toast align-items-center text-white 
+        {% if message.tags == 'success' %}bg-success
+        {% elif message.tags == 'error' or message.tags == 'danger' %}bg-danger
+        {% elif message.tags == 'warning' %}bg-warning text-dark
+        {% elif message.tags == 'info' %}bg-info
+        {% else %}bg-primary
+        {% endif %}
+        border-0 show mb-2" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="d-flex">
+          <div class="toast-body d-flex align-items-center gap-2">
+            {% if message.tags == 'success' %}
+              <i class="bi bi-check-circle-fill"></i>
+            {% elif message.tags == 'error' or message.tags == 'danger' %}
+              <i class="bi bi-x-circle-fill"></i>
+            {% elif message.tags == 'warning' %}
+              <i class="bi bi-exclamation-triangle-fill"></i>
+            {% else %}
+              <i class="bi bi-info-circle-fill"></i>
+            {% endif %}
+            {{ message }}
+          </div>
+          <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Cerrar"></button>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+{% endif %}
+<script>
+  document.querySelectorAll('.toast').forEach(toastEl => {
+    const toast = new bootstrap.Toast(toastEl, { delay: 4000 });
+    toast.show();
+  });
+</script>
+{% endblock body %}

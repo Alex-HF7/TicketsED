@@ -1,0 +1,17 @@
+{% for ticket in tickets_user %}
+  <div class="card mb-2 shadow-sm border-0 
+    {% if ticket.estado == 'resuelto' %}bg-success text-white
+    {% elif ticket.estado == 'en curso' %}bg-warning text-dark
+    {% else %}bg-danger text-white
+    {% endif %} rounded-4">
+    <div class="card-body py-2 px-3">
+      <div class="d-flex justify-content-between align-items-center">
+        <h6 class="mb-1">🎫 Ticket #{{ ticket.id }}</h6>
+        <span class="badge bg-light text-dark small">{{ ticket.estado|capfirst }}</span>
+      </div>
+      <p class="mb-0 small">{{ ticket.descripcion|truncatechars:30 }}</p>
+    </div>
+  </div>
+{% empty %}
+  <p class="text-muted">No tienes tickets aún.</p>
+{% endfor %}

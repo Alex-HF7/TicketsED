@@ -1,0 +1,66 @@
+{% extends "base/base.html" %}
+{% block title %}Estadisticas{% endblock title %}
+
+{% block body %}
+<div class="container mt-4">
+  <h2 class="mb-4 text-center">📈 Estadísticas - {{ mes }}</h2>
+
+  <!-- Filtro de mes -->
+  <form method="get" class="row justify-content-center mb-4">
+    <div class="col-md-4">
+      <label for="mes">Seleccionar mes:</label>
+      <input type="month" id="mes" name="mes" class="form-control" value="{{ selected_month }}">
+    </div>
+    <div class="col-md-2 align-self-end">
+      <button type="submit" class="btn btn-primary w-100">Ver</button>
+    </div>
+  </form>
+  
+  {% if sin_datos %}
+    <div class="alert alert-info text-center">
+      No hay datos para el mes seleccionado.
+    </div>
+  {% else %}
+
+  <!-- Progreso de tickets -->
+  <div class="card mb-4">
+    <div class="card-body">
+      <h5 class="card-title">✅ Progreso de tickets resueltos (meta: {{ meta_mensual }})</h5>
+      <div class="progress" style="height: 30px;">
+        <div class="progress-bar 
+                    {% if total_resueltos >= meta_mensual %}bg-success
+                    {% elif total_resueltos >= meta_mensual|divisibleby:2 %}bg-warning
+                    {% else %}bg-danger{% endif %}"
+            role="progressbar"
+            style="width: {{ progreso }}%;"
+            aria-valuenow="{{ total_resueltos }}"
+            aria-valuemin="0" aria-valuemax="{{ meta_mensual }}">
+          {{ total_resueltos }} / {{ meta_mensual }}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Gráficas -->
+  <div class="row">
+    <div class="col-md-6 mb-4">
+      <div class="card">
+        <div class="card-body">
+          {{ chart_categoria|safe }}
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6 mb-4">
+      <div class="card">
+        <div class="card-body">
+          {{ chart_deptos|safe }}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {% endif %}
+</div>
+{% endblock body %}
+
+

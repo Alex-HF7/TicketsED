@@ -1,0 +1,154 @@
+.navbar-brand-center {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+}
+
+.custom-navbar,
+.footer{
+      background-color: #2563EB ;
+}
+
+.logo-img{
+      height: 50px;
+      object-fit: contain;
+}
+
+body{
+      background-color: #F1F5F9;
+      color: #333
+}
+
+.navbar .nav-link{
+      color: #ffffff !important;
+      font-weight: 500;
+}
+
+.navbar .nav-link:hover,
+.navbar .nav-link:focus {
+  background-color: #1e40af; /* blue-800 */
+  border-radius: 5px;
+}
+
+.navbar .nav-link.active {
+  background-color: #1e3a8a; /* blue-900 */
+  border-radius: 5px;
+}
+
+/* Estilo del botón del dropdown */
+.navbar .dropdown-toggle {
+  color: #ffffff;
+  background-color: transparent;
+  border: 1px solid #ffffff;
+}
+
+.navbar .dropdown-toggle:hover {
+  background-color: #1e40af; /* Azul más oscuro */
+  border-color: #cbd5e1;
+}
+
+/* Estilo del menú desplegable */
+.dropdown-menu {
+  background-color: #1e3a8a; /* Azul más oscuro */
+  border: none;
+  border-radius: 0.5rem;
+}
+
+/* Estilo de los ítems */
+.dropdown-menu .dropdown-item {
+  color: #ffffff;
+}
+
+.dropdown-menu .dropdown-item:hover,
+.dropdown-menu .dropdown-item.active {
+  background-color: #2563EB; /* Azul principal */
+  color: #ffffff;
+}
+
+.btn-outline-light {
+  color: #fff;
+  border-color: #fff;
+}
+.step {
+      display: none;
+    }
+    .step.active {
+      display: block;
+    }
+
+.table-custom {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #f8fafc; /* gris claro */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  font-size: 0.95rem;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.table-custom thead {
+  background-color: #1d4ed8; /* azul más oscuro */
+  color: white;
+}
+
+.table-custom th,
+.table-custom td {
+  padding: 12px 16px;
+  text-align: left;
+  vertical-align: middle;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.table-custom th.col-id,
+.table-custom td.col-id {
+  width: 30px !important;      /* o incluso menos si lo deseas */
+  padding: 8px 10px; /* menos espacio interno */
+  text-align: center;
+}
+.table-custom th.col-date,
+.table-custom td.col-date {
+  width: 100px !important;      /* o incluso menos si lo deseas */
+  padding: 8px 10px; /* menos espacio interno */
+  text-align: center;
+}
+
+.table-custom tbody tr:nth-child(even) {
+  background-color: #e8f0fe; /* azul muy claro */
+}
+
+.table-custom tbody tr:hover {
+  background-color: #dbeafe;
+}
+
+/* Responsivo horizontal */
+.table-responsive {
+  overflow-x: auto;
+}
+
+/* Alinear íconos */
+.table-custom button i {
+  font-size: 1rem;
+  margin: 0;
+}
+
+/* Centramos texto de algunas columnas si se desea */
+.table-custom td.text-center {
+  text-align: center;
+}
+
+
+.pagination .page-link {
+  color: #2563EB;
+  border-color: #2563EB;
+}
+
+.pagination .page-link:hover {
+  background-color: #2563EB;
+  color: #fff;
+}
+
+.pagination .active .page-link {
+  background-color: #2563EB;
+  border-color: #2563EB;
+  color: #fff;
+}

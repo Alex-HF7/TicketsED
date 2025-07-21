@@ -1,0 +1,210 @@
+{% extends "base/base.html" %}
+{% block title %}Crear Ticket{% endblock title %}
+{% block body %}
+<div class="ontainer-fluid min-vh-100 d-flex align-items-center justify-content-center">
+  <div class="row w-100 justify-content-center">
+    <!-- Columna izquierda: Seguimiento -->
+     <div class="col-md-4 col-lg-3 mb-4">
+      <h5 class="mb-3 text-center">Seguimiento de Tickets</h5>
+      <div id="seguimiento-tickets">
+        {% include "ticket/seguimiento.html" %}
+      </div>
+     </div>
+     <div class="col-md-8 mx-auto">
+      <div class="card shadow rounded-4 border-0">
+        <div class="card-body p-4">
+          <h4 class="card-title mb-4">Ticket de Soporte</h4>
+
+              <!-- Paso 1: Categoría -->
+              <div id="step1" class="step active">
+                <div class="mb-3">
+                  <label class="form-label"><strong>Selecciona una categoría:</strong></label>
+                  <div class="row">
+                    <div class="col-md-4">
+                      <div class="form-check">
+                        <input class="form-check-input" type="radio" name="categoria" id="equipo" value="equipo">
+                        <label class="form-check-label" for="equipo">Equipo</label>
+                      </div>
+                      <div class="form-check">
+                        <input class="form-check-input" type="radio" name="categoria" id="programas" value="programas">
+                        <label class="form-check-label" for="software">Programas</label>
+                      </div>
+                      <div class="form-check">
+                        <input class="form-check-input" type="radio" name="categoria" id="impresora" value="impresora">
+                        <label class="form-check-label" for="impresora">Impresora</label>
+                      </div>
+                    </div>
+                    <div class="col-md-4">
+                      <div class="form-check">
+                        <input class="form-check-input" type="radio" name="categoria" id="telefono" value="telefono">
+                        <label class="form-check-label" for="telefono">Teléfono</label>
+                      </div>
+                      <div class="form-check">
+                        <input class="form-check-input" type="radio" name="categoria" id="ofimatica" value="ofimatica">
+                        <label class="form-check-label" for="ofimatica">Ofimática</label>
+                      </div>
+                      <div class="form-check">
+                        <input class="form-check-input" type="radio" name="categoria" id="internet" value="internet">
+                        <label class="form-check-label" for="internet">Internet</label>
+                      </div>
+                    </div>
+                    {% if request.user.rol in 'admin soporte' %}
+                    <div class="col-md-4">
+                      <div class="form-check">
+                        <input class="form-check-input" type="radio" name="categoria" id="mantenimiento" value="mantenimiento">
+                        <label class="form-check-label" for="mantenimiento">Mantenimiento</label>
+                      </div>
+                    </div>
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+
+              <!-- Paso 2: Descripción -->
+              <div id="step2" class="step">
+                <div class="mb-3">
+                  <label for="descripcion" class="form-label"><strong>Describe tu problema:</strong></label>
+                  <textarea class="form-control" id="descripcion" rows="4" placeholder="Escribe aquí..."></textarea>
+                </div>
+              </div>
+
+              <!-- Paso 3: Botón -->
+              <div id="step3" class="step text-end">
+                <button class="btn btn-primary" onclick="enviarFormulario()">Enviar</button>
+              </div>
+        </div>
+      </div>
+     </div>
+  </div>
+  <div id="toast-container" class="toast-container position-fixed bottom-0 start-50 translate-middle-x p-3" style="z-index: 1055;"></div>
+</div>
+
+  <!-- Bootstrap JS + lógica -->
+  <script>
+    const radios = document.querySelectorAll('input[name="categoria"]');
+    const descripcion = document.getElementById("descripcion");
+
+    radios.forEach(radio => {
+      radio.addEventListener("change", () => {
+        document.getElementById("step2").classList.add("active");
+      });
+    });
+
+    descripcion.addEventListener("input", () => {
+      if (descripcion.value.trim().length > 0) {
+        document.getElementById("step3").classList.add("active");
+      } else {
+        document.getElementById("step3").classList.remove("active");
+      }
+    });
+    function enviarFormulario() {
+      const categoriaInput = document.querySelector('input[name="categoria"]:checked');
+      const texto = descripcion.value.trim();
+      const textolower = texto.toLowerCase();
+        
+      if (!categoriaInput || !textolower) {
+        mostrarNotificacion("Por favor selecciona una categoría y escribe una descripción.", "warning");
+        return;
+      }
+    
+      const categoria = categoriaInput.value;
+    
+      fetch('/ticket/crear/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': getCookie('csrftoken')
+        },
+        body: JSON.stringify({
+          categoria: categoria,
+          descripcion: textolower
+        })
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          mostrarNotificacion("Su ticket se ha creado correctamente.", "success");
+        
+          // ✅ Restaurar el formulario:
+          // Desmarcar los radios
+          const radios = document.querySelectorAll('input[name="categoria"]');
+          radios.forEach(r => r.checked = false);
+        
+          // Limpiar textarea
+          descripcion.value = '';
+        
+          // Volver al paso 1 (si usas pasos ocultos)
+          document.getElementById('step1').classList.add('active');
+          document.getElementById('step2').classList.remove('active');
+          document.getElementById('step3').classList.remove('active');
+        } else {
+          mostrarNotificacion("Ocurrió un error al crear el ticket.", "error");
+        }
+      });
+    }
+
+    function getCookie(name) {
+      let cookieValue = null;
+      if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let cookie of cookies) {
+          cookie = cookie.trim();
+          if (cookie.startsWith(name + '=')) {
+            cookieValue = decodeURIComponent(cookie.slice(name.length + 1));
+            break;
+          }
+        }
+      }
+      return cookieValue;
+    }
+
+    function mostrarNotificacion(mensaje, tipo = 'success') {
+      const contenedor = document.getElementById("toast-container");
+
+      const colores = {
+        success: 'bg-success text-white',
+        error: 'bg-danger text-white',
+        info: 'bg-primary text-white',
+        warning: 'bg-warning text-dark'
+      };
+    
+      const toast = document.createElement('div');
+      toast.className = `toast align-items-center ${colores[tipo]} border-0 show mb-2`;
+      toast.setAttribute('role', 'alert');
+      toast.setAttribute('aria-live', 'assertive');
+      toast.setAttribute('aria-atomic', 'true');
+    
+      toast.innerHTML = `
+        <div class="d-flex">
+          <div class="toast-body">${mensaje}</div>
+          <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Cerrar"></button>
+        </div>
+      `;
+    
+      contenedor.appendChild(toast);
+    
+      // Auto quitar después de 5 segundos
+      setTimeout(() => {
+        toast.remove();
+      }, 5000);
+    }
+
+      // Refrescar solo la sección de historial de tickets cada 10 segundos
+    setInterval(() => {
+      fetch("{% url 'seguimiento_ajax' %}",{
+        credentials: 'same-origin'
+      })
+      .then(response => {
+      if (!response.ok) throw new Error('Error al obtener tickets');
+        return response.text();
+      })
+      .then(html => {
+        document.getElementById("seguimiento-tickets").innerHTML = html;
+      })
+      .catch(error => {
+        console.error('Error al actualizar tickets:', error);
+    });
+    }, 5000); // 10000 ms = 10 segundos
+  </script>
+{% endblock body %}
+
