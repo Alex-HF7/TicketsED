@@ -28,6 +28,7 @@
           <th>Tiempo</th>
           <th class="col-date">Fecha In</th>
           <th class="col-date">Fecha Fin</th>
+          <th>Edit</th>
         </tr>
       </thead>
       <tbody>
@@ -82,6 +83,21 @@
             <td>{{ ticket.tiempo | default:"-"}}</td>
             <td class="col-date">{{ ticket.fecha_creado|date:"d M Y" }}</td>
             <td class="col-date">{{ ticket.fecha_cierre|date:"d M Y" }}</td>
+            <td>
+              {% if ticket.estado != 'resuelto' %}
+              <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#modalEditar{{ticket.id}}">
+                <i class="bi bi-pen"></i>
+              </button>
+              {% endif %}
+              {% if ticket.estado == 'pendiente' %}
+              <form action="{% url "eliminar_ticket" ticket.id %}" class="d-inline" method="post">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('¿Estás seguro de que deseas eliminar este ticket?');">
+                  <i class="bi bi-trash3"></i>
+                </button>
+              </form>
+              {% endif %}
+            </td>
           </tr>
         {% empty %}
           <tr>
@@ -92,6 +108,41 @@
     </table>
   </div>
 </div>
+{% for ticket in tickets %}
+<div class="modal fade" id="modalEditar{{ ticket.id }}" tabindex="-1" aria-labelledby="modalEditarLabel{{ ticket.id }}" aria-hidden="true">
+  <div class="modal-dialog">
+    <form method="post" action="{% url 'editar_ticket' ticket.id %}">
+      {% csrf_token %}
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalEditarLabel{{ ticket.id }}">Editar Ticket #{{ ticket.id }}</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="descripcion{{ ticket.id }}" class="form-label">Descripción:</label>
+            <textarea class="form-control" id="descripcion{{ ticket.id }}" name="descripcion" rows="3" required>{{ ticket.descripcion }}</textarea>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Categoría:</label><br>
+            {% for clave, nombre in categorias %}
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="categoria" id="cat{{ clave }}{{ ticket.id }}"
+                value="{{ clave }}" {% if ticket.categoria == clave %}checked{% endif %}>
+                <label class="form-check-label" for="cat{{ clave }}{{ ticket.id }}">{{ nombre }}</label>
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button type="submit" class="btn btn-primary">Guardar cambios</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+{% endfor %}
 
 <nav aria-label="Paginación de tickets">
   <ul class="pagination justify-content-center mt-4">
