@@ -10,6 +10,7 @@ from calendar import monthrange
 from django.templatetags.static import static
 from django.utils.timezone import now
 from django.utils.dateparse import parse_date
+from django.views.decorators.http import require_POST
 import pandas as pd
 import plotly.express as px
 import json
@@ -139,7 +140,10 @@ def dashboard_soporte(request):
     page_number = request.GET.get('page')
     tickets = paginator.get_page(page_number)
 
-    return render(request, 'soporte/dashboard.html', {'tickets': tickets})
+    return render(request, 'soporte/dashboard.html', {
+        'tickets': tickets,
+        'categorias': Ticket._meta.get_field('categoria').choices
+        })
 
 @login_required
 def estadisticas_tickets(request):
@@ -214,3 +218,38 @@ def estadisticas_tickets(request):
     }
     
     return render(request, 'soporte/estadisticas.html', context)
+
+@require_POST
+@login_required
+def editar_ticket(request, ticket_id):
+    if request.user.rol not in ['soporte', 'admin']:
+        return HttpResponseForbidden("No autorizado.")
+
+    descripcion = request.POST.get('descripcion')
+    categoria = request.POST.get('categoria')
+
+    try:
+        ticket = Ticket.objects.get(id=ticket_id)
+        ticket.descripcion = descripcion
+        ticket.categoria = categoria
+        ticket.save()
+        messages.success(request, f"Ticket #{ticket_id} actualizado correctamente.")
+    except Ticket.DoesNotExist:
+        messages.error(request, "Ticket no encontrado.")
+
+    return redirect('dashboard_soporte')
+
+
+@require_POST
+@login_required
+def eliminar_ticket(request, ticket_id):
+    if request.user.rol not in ['soporte', 'admin']:
+        return HttpResponseForbidden("No autorizado.")
+    try:
+        ticket = Ticket.objects.get(id=ticket_id)
+        ticket.delete()
+        messages.success(request, f"Ticket #{ticket_id} eliminado.")
+    except Ticket.DoesNotExist:
+        messages.error(request, "El ticket no existe.")
+    
+    return redirect('dashboard_soporte')
