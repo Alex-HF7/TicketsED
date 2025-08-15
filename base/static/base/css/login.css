@@ -1,6 +1,12 @@
+@font-face {
+  font-family: Gibson;
+  src: url(https://michoacan.gob.mx/cdn/fonts/gibson-regular-webfont.woff);
+  font-weight: normal;
+}
+
 /* Fondo con imagen */
 .bg-container {
-  background-image: url("../img/fondo.jpg");
+  background-image: url("../img/modern.jpg");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -12,6 +18,7 @@
   max-width: 400px;
   background-color: white;
   border-radius: 1rem;
+  font-family: 'Gibson', sans-serif;
 }
 
 /* Logo */
@@ -24,4 +31,5 @@
   font-size: 0.95rem;
   border-left: 4px solid #dc3545;
   box-shadow: 0 0 10px rgba(220, 53, 69, 0.2);
+  font-family: 'Gibson', sans-serif;
 }

@@ -70,7 +70,7 @@
 
               <!-- Paso 3: Botón -->
               <div id="step3" class="step text-end">
-                <button class="btn btn-primary" onclick="enviarFormulario()">Enviar</button>
+                <button class="btn" style="background-color: #6A0F49; color: #fff;" onclick="enviarFormulario()">Enviar</button>
               </div>
         </div>
       </div>
@@ -204,7 +204,7 @@
       .catch(error => {
         console.error('Error al actualizar tickets:', error);
     });
-    }, 5000); // 10000 ms = 10 segundos
+    }, 5000); // 5000 ms = 5 segundos
   </script>
 {% endblock body %}
 
