@@ -33,13 +33,13 @@
       {% if request.user.rol in 'soporte admin' %}
       <ul class="navbar-nav me-3" id="linkContainer">
         <li class="nav-item">
-          <a class="nav-link {% if request.resolver_match.url_name == 'crear_ticket' %}active{% endif %}" href={% url "crear_ticket" %} onclick="toggleLink(this)">Crear Ticket</a>
+          <a class="nav-link {% if request.resolver_match.url_name == 'estadisticas' %}active{% endif %}" href={% url "estadisticas" %} onclick="toggleLink(this)">Panel</a>
         </li>
         <li class="nav-item">
           <a class="nav-link {% if request.resolver_match.url_name == 'dashboard_soporte' %}active{% endif %}" href={% url "dashboard_soporte" %} onclick="toggleLink(this)">Pendientes</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link {% if request.resolver_match.url_name == 'estadisticas' %}active{% endif %}" href={% url "estadisticas" %} onclick="toggleLink(this)">Panel</a>
+          <a class="nav-link {% if request.resolver_match.url_name == 'crear_ticket' %}active{% endif %}" href={% url "crear_ticket" %} onclick="toggleLink(this)">Crear Ticket</a>
         </li>
       </ul>
       {% endif %}
@@ -54,7 +54,7 @@
           {% if request.user.rol in 'soporte admin' %}
           <li><a class="dropdown-item" href="/admin/empleado/empleado/" target="_blank">Gestión de usuarios</a></li>
           {% endif %}
-          <li><a class="dropdown-item text-info" href={% url "logout" %}>Cerrar sesión</a></li>
+          <li><a class="dropdown-item" style="color: #FFC3D0" href={% url "logout" %}>Cerrar sesión</a></li>
         </ul>
       </div>
     </div>

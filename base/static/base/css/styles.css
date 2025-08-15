@@ -1,3 +1,9 @@
+@font-face {
+  font-family: Gibson;
+  src: url(https://michoacan.gob.mx/cdn/fonts/gibson-regular-webfont.woff);
+  font-weight: normal;
+}
+
 .navbar-brand-center {
       position: absolute;
       left: 50%;
@@ -6,7 +12,7 @@
 
 .custom-navbar,
 .footer{
-      background-color: #2563EB ;
+      background-color: #6A0F49 ;
 }
 
 .logo-img{
@@ -16,7 +22,8 @@
 
 body{
       background-color: #F1F5F9;
-      color: #333
+      color: #333;
+      font-family: 'Gibson', sans-serif;
 }
 
 .navbar .nav-link{
@@ -26,12 +33,12 @@ body{
 
 .navbar .nav-link:hover,
 .navbar .nav-link:focus {
-  background-color: #1e40af; /* blue-800 */
+  background-color: #C83182; /* blue-800 */
   border-radius: 5px;
 }
 
 .navbar .nav-link.active {
-  background-color: #1e3a8a; /* blue-900 */
+  background-color: #4A001F; /* blue-900 */
   border-radius: 5px;
 }
 
@@ -43,13 +50,13 @@ body{
 }
 
 .navbar .dropdown-toggle:hover {
-  background-color: #1e40af; /* Azul más oscuro */
-  border-color: #cbd5e1;
+  background-color: #C83182; /* Azul más oscuro */
+  border-color: #FFC3D0;
 }
 
 /* Estilo del menú desplegable */
 .dropdown-menu {
-  background-color: #1e3a8a; /* Azul más oscuro */
+  background-color: #4A001F; /* Azul más oscuro */
   border: none;
   border-radius: 0.5rem;
 }
@@ -61,7 +68,7 @@ body{
 
 .dropdown-menu .dropdown-item:hover,
 .dropdown-menu .dropdown-item.active {
-  background-color: #2563EB; /* Azul principal */
+  background-color: #C83182; /* Azul principal */
   color: #ffffff;
 }
 
@@ -79,7 +86,7 @@ body{
 .table-custom {
   width: 100%;
   border-collapse: collapse;
-  background-color: #f8fafc; /* gris claro */
+  background-color: #fff0f5; /* gris claro */
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
   font-size: 0.95rem;
   border-radius: 8px;
@@ -87,7 +94,7 @@ body{
 }
 
 .table-custom thead {
-  background-color: #1d4ed8; /* azul más oscuro */
+  background-color: #6A0F49; /* azul más oscuro */
   color: white;
 }
 
@@ -96,7 +103,7 @@ body{
   padding: 12px 16px;
   text-align: left;
   vertical-align: middle;
-  border-bottom: 1px solid #e2e8f0;
+  border-bottom: 1px solid #f0d6e6;
 }
 
 .table-custom th.col-id,
@@ -113,11 +120,11 @@ body{
 }
 
 .table-custom tbody tr:nth-child(even) {
-  background-color: #e8f0fe; /* azul muy claro */
+  background-color: #f9e0ea; /* azul muy claro */
 }
 
 .table-custom tbody tr:hover {
-  background-color: #dbeafe;
+  background-color: #f5d1e0;
 }
 
 /* Responsivo horizontal */
@@ -138,17 +145,17 @@ body{
 
 
 .pagination .page-link {
-  color: #2563EB;
-  border-color: #2563EB;
+  color: #6A0F49;
+  border-color: #6A0F49;
 }
 
 .pagination .page-link:hover {
-  background-color: #2563EB;
+  background-color: #6A0F49;
   color: #fff;
 }
 
 .pagination .active .page-link {
-  background-color: #2563EB;
-  border-color: #2563EB;
+  background-color: #C83182;
+  border-color: #C83182;
   color: #fff;
 }
