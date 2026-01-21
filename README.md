@@ -31,11 +31,10 @@ Por su parte, el **personal de Informática** puede:
 ## 🛠️ Tecnologías Utilizadas
 
 - **Backend:** Django
-- **Base de datos:** PostgreSQL / MySQL / SQLite
+- **Base de datos:** PostgreSQL
 - **Frontend:** HTML, CSS, Bootstrap
-- **Autenticación:** Django Authentication System
 - **Servidor de aplicación:** Gunicorn
-- **Control de versiones:** Git & GitHub
+- **Control de versiones:** GitHub
 
 ---
 
@@ -81,10 +80,3 @@ Ejemplos:
 - 🧠 Hardware
 
 ---
-
-## 🚀 Instalación
-
-### 1️⃣ Clonar el repositorio
-```bash
-git clone https://github.com/Alex-HF7/ivem-tickets.git
-cd ivem-tickets
