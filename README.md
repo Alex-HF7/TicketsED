@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="plantilla/static/plantilla/img/logo.png" alt="Logo del IVEM" width="200"/>
+  <img src="base/static/base/img/l-ivem.png" alt="Logo del IVEM" width="200"/>
 </p>
 
 <h1 align="center">Sistema de Tickets – Departamento de Informática (IVEM)</h1>
